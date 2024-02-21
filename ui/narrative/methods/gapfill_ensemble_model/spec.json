@@ -26,7 +26,7 @@
         "service-mapping": {
             "url": "",
             "name": "EnsembleModeling",
-            "method": "run_EnsembleModeling",
+            "method": "gapfill_ensemble_model",
             "input_mapping": [
                 {
                     "narrative_system_variable": "workspace",

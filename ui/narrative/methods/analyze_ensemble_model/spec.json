@@ -1,5 +1,5 @@
 {
-  "name" : "Analyze Ensemble Modelings",
+  "name" : "Analyze Ensemble Model",
   "ver" : "0.0.1",
   "authors" : ["patrikd","kimbrel1","chenry"],
   "contact" : "http://kbase.us/contact-us/",
@@ -73,7 +73,7 @@
        "default_values" : [ 1 ],
        "field_type" : "text",
        "text_options" : {
-          "validate_as" : "int"}
+          "validate_as" : "int",
           "min_int" : 1,
           "max_int" : 10
        }
@@ -94,8 +94,8 @@
   "behavior" : {
     "service-mapping": {
        "url": "",
-       "name": "MergeMetabolicAnnotations",
-       "method": "merge_metabolic_annotations",
+       "name": "EnsembleModeling",
+       "method": "analyze_ensemble_model",
        "input_mapping": [
            {
                "narrative_system_variable": "workspace",

@@ -2,9 +2,9 @@
 # define display information
 #
 
-name     : Analyze Ensemble Modeling
-subtitle : Analyze Ensemble Modeling
-tooltip  : Analyze Ensemble Modeling
+name     : Analyze Ensemble Model
+subtitle : Analyze Ensemble Model
+tooltip  : Analyze Ensemble Model
 
 icon: data-teal.png
 

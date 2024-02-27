@@ -1,40 +1,102 @@
 #
 # define display information
 #
-name: Method Name Here
 
-tooltip: |
-    Perform some kind of method
+name     : Estimate Reaction Probabilities
+subtitle : Estimate reaction probabilities, given multiple functional annotations
+tooltip  : Estimate probabilities of enzymatic reactions assigned to each gene, based on multiple functional annotations (RAST, Prokka, DRAM)
 
-screenshots: []
+icon: data-teal.png
 
-icon: icon.png
+screenshots :
+    []
 
-#
-# define a set of similar apps that might be useful to the user
-#
-suggestions:
+suggestions :
     apps:
-        related:
-            [app1, app2]
-        next:
-            [app3, app4]
+        related :
+            []
+        next :
+            []
+    methods:
+        related :
+            []
+        next :
+            []
 
-#
-# Configure the display and description of parameters
-#
 parameters :
-    parameter_1 :
+    genome :
         ui-name : |
-            First parameter
+            Genome to be annotated
         short-hint : |
-            The first parameter
+            Select the Genome object with functional annotations
         long-hint  : |
-            The first parameter that needs to be entered to drive the method. This might be the first of many.
-
+            Select the Genome object containing multiple annotation events from which we can estimate reaction probabilities
+    annotation_source :
+        ui-name : |
+            Annotations to merge (RAST, Prokka, DRAM, or probabilistic)
+        short-hint : |
+            Select the annotations you want to merge (has to be RAST, Prokka, DRAM, or an annotation source that already includes probability values)
+        long-hint : |
+            Select the annotations you want to merge (has to be RAST, Prokka, DRAM, or an annotation source   
+    lineage :
+        ui-name : |
+            Taxonomic lineage 
+        short-hint : |
+            Taxonomic lineage of the genome
+        long-hint : |
+            Taxonomic lineage of the genome (Bacteria, Fungi, Archaea, Metazoan, Viridiplantae, or Other)
+    description :
+        ui-name : |
+            Description for the resulting probabilistic annotations
+        short-hint : |
+            Enter a description to use for the resulting probabilistic annotations
+        long-hint : |
+            Enter a description to use for the resulting probabilistic annotations
+    output_name :
+        ui-name : |
+            Output genome name
+        short-hint : |
+            Name for new genome with probabilistic annotations
+        long-hint : |
+            The name under which the resulting Genome that includes the new probabilistic annotations will be saved in the Narrative
 description : |
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pulvinar efficitur felis, quis tincidunt sem congue at. Vivamus ornare feugiat faucibus. Fusce tincidunt mattis nunc, nec varius purus convallis quis. Nulla facilisi. In at magna dolor. Suspendisse sit amet felis at arcu auctor dapibus vitae pharetra dui. Nam semper mi quis tortor fermentum mollis. Donec a arcu pharetra, rutrum dolor vitae, rutrum mauris. Donec ornare fringilla sagittis. Nam laoreet est in elementum malesuada. Vestibulum id mi eget urna hendrerit feugiat. Donec et ultrices nulla. Phasellus diam eros, dapibus at tempus nec, semper vel ante.</p>
+    <p>The Estimate Reaction Probabilities app allows the user to combine metabolic annotations from RAST, DRAM or Prokka present in the genome, and calculates a reaction probability for each of the reactions annotated for each of the genes. The resulting merged annotations with associated probability values will be added as a separate new annotation event in the genome, which can then be used for metabolic modeling by the <a href="https://narrative.kbase.us/#appcatalog/app/fba_tools/build_metabolic_model/release>Build Metabolic Model App</a>. </p>
 
-    <p>Curabitur auctor, metus at tristique euismod, odio elit tincidunt neque, a facilisis sem massa convallis dolor. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nunc ut hendrerit tellus. Nunc lacinia laoreet finibus. Etiam vitae sagittis enim. Fusce consectetur porta est eu pretium. In hac habitasse platea dictumst. Integer pellentesque sit amet sapien id venenatis. Nullam ac risus at orci eleifend aliquet. Vestibulum elit purus, euismod a nibh quis, pellentesque semper leo. Curabitur ullamcorper felis hendrerit nunc egestas, sit amet pharetra sapien porttitor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Maecenas hendrerit ipsum a ligula aliquet vestibulum. Duis a ante urna. Aenean ante neque, rhoncus id luctus ut, accumsan vel nunc.</p>
+    <p>Computational tools for assigning functional annotation to genes are known to be incomplete and inconsistent [1]. Annotated genomes typically contain 30–50% of genes without functional annotation [2], severely limiting our knowledge of the “parts lists” that the organisms have at their disposal. Individual annotation tools often return annotations for different subsets of genes, offering the potential to greatly increase the coverage of annotations by combining the outputs of multiple tools. As study of 27 bacterial reference genomes annotated using four different EC number prediction tools showed that using multiple tools can result in a drastically larger metabolic network reconstruction, adding on average 40% more EC numbers, and 37% more metabolic genes [1]. However integrating the different outputs from these tools in a cohesive manner remains a major challenge [3,4], due to differences in terminology and disagreements in functional annotations between the tools. Think of each annotation tool as an expert on a panel: each expert has their own strenths and weaknesses, but the experts don't always agree, and they often don't even speak the same language</p>
 
-    <p>Pellentesque accumsan aliquet magna, id consectetur tellus condimentum eu. Suspendisse elit dui, ornare ac leo eget, tincidunt feugiat orci. Maecenas auctor gravida lacinia. Mauris interdum nisi vel gravida varius. Nullam tempus, purus eget posuere aliquet, odio elit semper massa, quis facilisis massa odio vitae lacus. Fusce varius enim a mi vehicula tempus. Maecenas faucibus tellus ipsum, at venenatis ipsum auctor et. Suspendisse sem mi, dignissim id porta efficitur, auctor eget magna. Vivamus varius purus nulla, porttitor euismod lorem cursus quis. Nulla sit amet eros nec sem ultrices pulvinar.</p>
+    <p>The <a href="https://narrative.kbase.us/#catalog/apps/MergeMetabolicAnnotations/merge_metabolic_annotations/release>Merge Metabolic Annotations</a> app solves these problems by mapping selected annotation sources in the genome that contain metabolic enzyme annotations to a common database of metabolic reactions: the ModelSEED Biochemistry Database [5]. With this common language of metabolic reactions, the user can then decide how to combine the inputs from each tool to derive a consensus annotation. In our analogy, a panel of experts could simply vote on the function for each gene. Or some experts could be given a higher weight in the vote based on their seniority or prior performance. In our implementation, the user assigns a weight to each annotation source they wish to merge. For each gene we then score the proposed functions based on the sum of weights attached to the annotation sources predicting that function. The user can also specify a minimum threshold score for a function to be included in the merged annotation, and can choose whether to include only the best annotation above that threshold, or all annotations above that threshold.</p>
+
+    <p>This flexible scoring scheme can implement a wide range of merging policies the user may want to implement, including taking the union of all annotations, majority rule, a priority list, and much more. With carefully chosen weights, this scheme could even be used to implement a <a href="https://en.wikipedia.org/wiki/Naive_Bayes_classifier">Naive Bayes classifier</a>, calculating the probability that gene X has function Y, given all of the annotation sources.</p>
+
+    <p>The default settings assing a weight of 1 to each annotation source, and set the threshold to 1 as well, which is equivalent to taking the union of all annotations. This will result in the largest possible number of genes and reactions, but will also tend to include a large number of false positives. </p>
+
+    <p>For additional information about metabolic modeling, visit the <a href="https://kbase.us/metabolic-modeling-faq/">Metabolic Modeling in KBase FAQ</a>.<p>
+
+    <p><strong>Team members who developed & deployed algorithm in KBase:</strong>
+    Jeffrey Kimbrel, Patrik D'haeseleer, Chris Henry. For questions, please <a href="https://www.kbase.us/support/">contact us</a>.</p>
+
+publications :
+    -
+        display-text: |
+            [1] Griesemer M, Kimbrel JA, Zhou CE, Navid A, D'haeseleer P. Combining multiple functional annotation tools increases coverage of metabolic annotation. BMC Genomics. 2018 Dec 19;19(1):948. doi: 10.1186/s12864-018-5221-9.
+        link: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6299973/
+
+    -
+        display-text: |
+            [2] Hanson AD, Pribat A, Waller JC, de Crécy-Lagard V. ‘Unknown’ proteins and “orphan” enzymes: the missing half of the engineering parts list - and how to find it. Biochem J. 2010;425:1–11. doi: 10.1042/BJ20091328.
+        link: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3022307/
+
+    -
+        display-text: |
+            [3] Ijaq J, Chandrasekharan M, Poddar R, Bethi N, Sundararajan VS. Annotation and curation of uncharacterized proteins- challenges. Front Genet. 2015;6:1750. doi: 10.3389/fgene.2015.00119.
+        link: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4379932/
+
+    -
+        display-text: |
+            [4] Land M, Hauser L, Jun S-R, Nookaew I, Leuze MR, Ahn T-H, et al. Insights from 20 years of bacterial genome sequencing. Funct Integr Genomics. 2015;15:141–161. doi: 10.1007/s10142-015-0433-4.
+        link: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4361730/
+
+    -
+        display-text: |
+            [5] Seaver SMD, Liu F, Zhang Q, Jeffryes J, Faria JP, Edirisinghe JN, Mundy M, Chia N, Noor E, Beber ME, Best AA, DeJongh M, Kimbrel JA, D'haeseleer P, McCorkle SR, Bolton JR, Pearson E, Canon S, Wood-Charlson EM, Cottingham RW, Arkin AP, Henry CS. The ModelSEED Biochemistry Database for the integration of metabolic annotations and the reconstruction, comparison and analysis of metabolic models for plants, fungi and microbes. Nucleic Acids Res. 2021 Jan 8;49(D1):D1555. doi: 10.1093/nar/gkaa1143.
+        link: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7778962/

@@ -22,7 +22,7 @@
        }
      },
      {
-        "id" : "annotation_source",
+        "id" : "annotations_to_merge",
         "optional" : false,
         "advanced" : false,
         "allow_multiple" : false,
@@ -46,7 +46,7 @@
               "description_template" : "<strong>{{id}}</strong> ontology terms from <strong>{{method}}</strong> added <strong>{{timestamp}}</strong>",
               "selection_id" : "description"
            },
-           "multiselection" : false
+           "multiselection" : true
         },
         "text_options" : {
            "valid_ws_types" : []
@@ -108,8 +108,8 @@
   "behavior" : {
     "service-mapping": {
        "url": "",
-       "name": "MergeMetabolicAnnotations",
-       "method": "merge_metabolic_annotations",
+       "name": "EnsembleModeling",
+       "method": "estimate_reaction_probabilities",
        "input_mapping": [
            {
                "narrative_system_variable": "workspace",
@@ -125,12 +125,8 @@
                "input_parameter" : "annotations_to_merge"
            },
            {
-               "target_property" : "annotation_threshold",
-               "input_parameter" : "annotation_threshold"
-           },
-           {
-               "target_property" : "keep_best_annotation_only",
-               "input_parameter" : "keep_best_annotation_only"
+               "target_property" : "lineage",
+               "input_parameter" : "lineage"
            },
            {
                "target_property" : "description",

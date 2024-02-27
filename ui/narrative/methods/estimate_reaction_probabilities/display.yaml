@@ -31,7 +31,7 @@ parameters :
             Select the Genome object with functional annotations
         long-hint  : |
             Select the Genome object containing multiple annotation events from which we can estimate reaction probabilities
-    annotation_source :
+    annotation_to_merge :
         ui-name : |
             Annotations to merge (RAST, Prokka, DRAM, or probabilistic)
         short-hint : |

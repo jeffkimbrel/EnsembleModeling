@@ -54,7 +54,7 @@
      },
      {
         "id" : "lineage",
-        "field_type" : "drop-down",
+        "field_type" : "dropdown",
         "allow_multiple" : false,
         "optional" : false,
         "advanced" : false,

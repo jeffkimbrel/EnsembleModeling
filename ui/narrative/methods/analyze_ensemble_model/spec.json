@@ -1,54 +1,156 @@
 {
-    "ver": "0.0.1",
-    "authors": [
-        "kimbrel1"
-    ],
-    "contact": "",
-    "categories": ["active"],
-    "widgets": {
-        "input": null,
-        "output": null
-    },
-    "parameters": [ 
-        {
-            "id": "parameter_1",
-            "optional": true,
-            "advanced": false,
-            "allow_multiple": false,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": [ ]
-            }
-        }
-    ],
-    "behavior": {
-        "service-mapping": {
-            "url": "",
-            "name": "EnsembleModeling",
-            "method": "analyze_ensemble_model",
-            "input_mapping": [
+  "name" : "Analyze Ensemble Modelings",
+  "ver" : "0.0.1",
+  "authors" : ["patrikd","kimbrel1","chenry"],
+  "contact" : "http://kbase.us/contact-us/",
+  "visble" : true,
+  "categories" : ["active","annotation","metabolic_modeling"],
+  "widgets" : {
+    "input" : null,
+    "output" : ""
+  },
+  "parameters" : [
+     {
+       "id" : "ensemble_model",
+       "optional" : false,
+       "advanced" : false,
+       "allow_multiple" : false,
+       "default_values" : [ "" ],
+       "field_type" : "text",
+       "text_options" : {
+         "valid_ws_types" : [ "FILL IN CORRECT TYPE HERE" ]
+       }
+     },
+     {
+       "id" : "filter",
+       "optional" : false,
+       "advanced" : false,
+       "allow_multiple" : false,
+       "field_type" : "checkbox",
+       "default_values" : [ "do not filter" ],
+       "checkbox_options" : {
+          "unchecked_value" : "do not filter",
+          "checked_value" : "filter"
+       },
+     },
+     {
+       "id" : "distance_metric",
+       "optional" : false,
+       "advanced" : false,
+       "allow_multiple" : false,
+       "default_values" : [ "euclidean" ],
+       "field_type" : "dropdown",
+       "dropdown_options":{
+          "options": [
                 {
-                    "narrative_system_variable": "workspace",
-                    "target_property": "workspace_name"
-                },{
-                    "narrative_system_variable": "workspace_id",
-                    "target_property": "workspace_id"
-                },{
-                    "input_parameter": "parameter_1",
-                    "target_property": "parameter_1"
-                }
-            ],
-            "output_mapping": [
+                    "value": "euclidean",
+                    "display": "Euclidean"
+                },
                 {
-                    "service_method_output_path": [0,"report_name"],
-                    "target_property": "report_name"
-                },{
-                    "service_method_output_path": [0,"report_ref"],
-                    "target_property": "report_ref"
+                    "value": "manhattan",
+                    "display": "Manhattan"
                 }
-            ]
-        }
-    },
-    "job_id_output_field": "docker"
+           ]
+       }
+     },
+     {
+       "id" : "rescale",
+       "optional" : false,
+       "advanced" : false,
+       "allow_multiple" : false,
+       "field_type" : "checkbox",
+       "default_values" : [ "do not rescale" ],
+       "checkbox_options" : {
+          "unchecked_value" : "do not rescale",
+          "checked_value" : "rescale"
+       },
+     },
+     {
+       "id" : "clusters",
+       "optional" : false,
+       "advanced" : false,
+       "allow_multiple" : false,
+       "default_values" : [ 1 ],
+       "field_type" : "text",
+       "text_options" : {
+          "validate_as" : "int"}
+          "min_int" : 1,
+          "max_int" : 10
+       }
+     },
+     {
+       "id" : "output_name",
+       "optional" : false,
+       "advanced" : false,
+       "allow_multiple" : false,
+       "default_values" : [ "" ],
+       "field_type" : "text",
+       "text_options" : {
+         "valid_ws_types" : [ "KBaseGenomes.Genome" ],
+         "is_output_name" : true
+       }
+     }
+  ],
+  "behavior" : {
+    "service-mapping": {
+       "url": "",
+       "name": "MergeMetabolicAnnotations",
+       "method": "merge_metabolic_annotations",
+       "input_mapping": [
+           {
+               "narrative_system_variable": "workspace",
+               "target_property": "workspace_name"
+           },
+           {
+               "target_property" : "ensemble_model",
+               "input_parameter" : "ensemble_model",
+               "target_type_transform": "resolved-ref"
+           },
+           {
+               "target_property" : "filter",
+               "input_parameter" : "filter"
+           },
+           {
+               "target_property" : "distance_metric",
+               "input_parameter" : "distance_metric"
+           },
+           {
+               "target_property" : "rescale",
+               "input_parameter" : "rescale"
+           },
+           {
+               "target_property" : "clusters",
+               "input_parameter" : "clusters"
+           },
+           {
+               "target_property" : "output_name",
+               "input_parameter" : "output_name"
+           }
+       ],
+      "output_mapping" : [
+     {
+             "narrative_system_variable": "workspace",
+             "target_property": "wsName"
+           },
+           {
+             "service_method_output_path": [0,"obj_ref"],
+             "target_property": "obj_ref",
+             "target_type_transform": "resolved-ref"
+           },
+           {
+               "service_method_output_path": [0, "report_name"],
+               "target_property": "report_name"
+           },
+           {
+               "service_method_output_path": [0, "report_ref"],
+               "target_property": "report_ref"
+           },
+           {
+               "constant_value": "16",
+               "target_property": "report_window_line_height"
+           }
+      ]
+    }
+  },
+  "job_id_output_field": "docker"
 }

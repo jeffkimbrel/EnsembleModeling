@@ -31,7 +31,7 @@
        "checkbox_options" : {
           "unchecked_value" : "do not filter",
           "checked_value" : "filter"
-       },
+       }
      },
      {
        "id" : "distance_metric",
@@ -63,7 +63,7 @@
        "checkbox_options" : {
           "unchecked_value" : "do not rescale",
           "checked_value" : "rescale"
-       },
+       }
      },
      {
        "id" : "clusters",

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import logging
 import time
 import unittest
 from configparser import ConfigParser
@@ -43,7 +44,7 @@ class EnsembleModelingTest(unittest.TestCase):
         cls.scratch = cls.cfg['scratch']
         cls.callback_url = os.environ['SDK_CALLBACK_URL']
         suffix = int(time.time() * 1000)
-        cls.wsName = "test_ContigFilter_" + str(suffix)
+        cls.wsName = "test_ensemble_" + str(suffix)
         ret = cls.wsClient.create_workspace({'workspace': cls.wsName})  # noqa
 
     @classmethod
@@ -63,5 +64,21 @@ class EnsembleModelingTest(unittest.TestCase):
         #
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
-        ret = self.serviceImpl.run_EnsembleModeling(self.ctx, {'workspace_name': self.wsName,
-                                                             'parameter_1': 'Hello World!'})
+
+        # base app
+        # ret = self.serviceImpl.run_EnsembleModeling(self.ctx, {'workspace_name': self.wsName,
+        #                                                      'parameter_1': 'Hello World!'})
+        
+
+        # analyze app
+        params_analyze = {
+            "debug": True,
+            "ensemble_file": "SampleFBA.json",
+            "workspace_name": self.wsName
+        }
+
+        ret = self.serviceImpl.analyze_ensemble_model(self.ctx, params_analyze)
+        
+
+
+        

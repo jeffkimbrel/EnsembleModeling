@@ -3,11 +3,8 @@
 import logging
 import os
 
-# from .utils.ImportAnnotationsUtil import ImportAnnotationsUtil
-# from MergeMetabolicAnnotations.utils.ImportAnnotationsUtil import ImportAnnotationsUtil
-
-
-
+from .utils.AnalyzeEnsembleModelUtil import AnalyzeEnsembleModelUtil
+from EnsembleModeling.utils.AnalyzeEnsembleModelUtil import AnalyzeEnsembleModelUtil
 
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
@@ -28,7 +25,7 @@ class EnsembleModeling:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "0.0.1"
+    VERSION = "0.0.2"
     GIT_URL = ""
     GIT_COMMIT_HASH = ""
 
@@ -74,7 +71,29 @@ class EnsembleModeling:
         # return the results
         return [output]
     
+    def analyze_ensemble_model(self, ctx, params):
+        """
+        This example function accepts any number of parameters and returns results in a KBaseReport
+        :param params: instance of mapping from String to unspecified object
+        :returns: instance of type "ReportResults" -> structure: parameter
+           "report_name" of String, parameter "report_ref" of String
+        """
+        # ctx is the context object
+        # return variables are: output
+        #BEGIN run_EnsembleModeling
+        #BEGIN import_annotations
+        analyze_runner = AnalyzeEnsembleModelUtil(self.config)
+        output = analyze_runner.run(ctx, params)
+        logging.info("RUNNING")
+        #END import_annotations
+        #END run_EnsembleModeling
 
+        # At some point might do deeper type checking...
+        if not isinstance(output, dict):
+            raise ValueError('Method analyze_ensemble_model return value ' +
+                             'output is not type dict as required.')
+        # return the results
+        return [output]
 
 
 

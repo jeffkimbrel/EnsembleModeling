@@ -4,11 +4,7 @@ from rpy2.robjects.lib.dplyr import DataFrame
 from rpy2.robjects.lib import ggplot2
 from rpy2.robjects import rl
 
-# import R package and print version
-et = importr("ensembletools")
-print(f"ensembletools R package v{et.__version__}")
 
-json_path = "/Users/kimbrel1/Github/EnsembleModeling/test/test_data/SampleFBA.json"
 
 # Helpers
 
@@ -18,8 +14,18 @@ get_r_dollar = ro.baseenv['$']
 
 # Functions
 
+et = importr('ensembletools', lib_loc="/usr/local/lib/R/site-library")
+# et = importr('ensembletools')
+
 def ensemble(json_path,
              scale = True):
+    
+    if scale == 0:
+        scale = False
+    else:
+        scale = True
+
+
     e = et.ensemble(json_path, 
                     scale = scale)
     return(e)
@@ -32,8 +38,8 @@ def ordinate_solutions(e, distance = "euclidean", quiet = True):
     return(ordination)
 
 
-def cluster_solutions(ordination, k = 0):
-    clusters = et.cluster_solutions(e.e, k = k)
+def cluster_solutions(e, k = 0):
+    clusters = et.cluster_solutions(e, k = k)
 
     return(clusters)
 
@@ -61,23 +67,29 @@ def get_biomass_plot(e, file_path):
 
 
 
+# if __name__ == "__main__":
+
+#     # import R package and print version
+#     et = importr('ensembletools')
+#     print(f"ensembletools R package v{et.__version__}")
+
+#     json_path = "/Users/kimbrel1/Github/EnsembleModeling/test/test_data/SampleFBA.json"
+
+#     e = ensemble(json_path, scale = True)
+
+#     get_biomass_plot(e, file_path = "/Users/kimbrel1/Github/EnsembleModeling/test/test_data/biomass.png")
+
+#     e.e = ordinate_solutions(e,
+#                             quiet = True)
+
+#     print(f"Stress is {et.stress(e.e)}")
 
 
-e = ensemble(json_path, scale = True)
+#     e.e = cluster_solutions(e.e, k = 4)
 
-get_biomass_plot(e, file_path = "/Users/kimbrel1/Github/EnsembleModeling/test/test_data/biomass.png")
+#     # print(et.sil_widths(e.e))
+#     # print(et.medioids(e.e))
 
-e.e = ordinate_solutions(e,
-                        quiet = True)
-
-print(f"Stress is {et.stress(e.e)}")
-
-
-e.e = cluster_solutions(e.e, k = 4)
-
-# print(et.sil_widths(e.e))
-# print(et.medioids(e.e))
-
-plot_clusters(e.e, file_path="/Users/kimbrel1/Github/EnsembleModeling/test/test_data/clusters.png")
+#     plot_clusters(e.e, file_path="/Users/kimbrel1/Github/EnsembleModeling/test/test_data/clusters.png")
 
 

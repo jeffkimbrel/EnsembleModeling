@@ -1,6 +1,7 @@
 import datetime
 import logging
 import uuid
+import os
 
 import rpy2
 import rpy2.robjects as robjects
@@ -8,6 +9,8 @@ from rpy2.robjects.packages import importr, data
 
 from installed_clients.WorkspaceClient import Workspace as Workspace
 from installed_clients.KBaseReportClient import KBaseReport
+
+import EnsembleModeling.utils.r_functions as r
 
 class AnalyzeEnsembleModelUtil:
 
@@ -24,9 +27,41 @@ class AnalyzeEnsembleModelUtil:
         logging.info("*****Running run method of AnalyzeEnsembleModelUtil")
 
 
-        ensembletools = importr('ensembletools', lib_loc="/usr/local/lib/R/site-library")
-        logging.info(ensembletools.__version__)
+        et = importr('ensembletools', lib_loc="/usr/local/lib/R/site-library")
+        logging.info(et.__version__)
 
+        # get ensemble json path
+        if 'debug' in params and params['debug'] is True:
+            json_path = os.path.join(
+                '/kb/module/test/test_data', params['json_path'])
+        else:
+            # needs to be updated to take API data
+            json_path = os.path.join("/staging/", params['json_path'])
+
+        logging.info(json_path)
+
+        # make ensemble object
+        logging.info("Making ensemble object")
+        ensemble = r.ensemble(json_path, scale=params['rescale'])
+        logging.info(ensemble)
+
+        # ordinate solutions
+        logging.info("Ordinating solutions")
+        ensemble = r.ordinate_solutions(ensemble,
+                                         distance = params['distance_metric'],
+                                         quiet = False)
+        
+        logging.info(ensemble)
+        #logging.info(et.stress(ensemble))
+
+        # cluster solutions
+        logging.info("Clustering solutions")
+        ensemble = r.cluster_solutions(ensemble, k = params['clusters'])
+        logging.info(et.sil_widths(ensemble))
+        logging.info(et.medioids(ensemble))
+
+        # plot clusters
+        r.plot_clusters(ensemble, file_path="/Users/kimbrel1/Github/EnsembleModeling/test/test_data/clusters.png")
 
         return({})
 

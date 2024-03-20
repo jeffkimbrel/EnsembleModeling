@@ -73,7 +73,12 @@ class EnsembleModelingTest(unittest.TestCase):
         # analyze app
         params_analyze = {
             "debug": True,
-            "ensemble_file": "SampleFBA.json",
+            "json_path": "SampleFBA.json",
+            "distance_metric": "manhattan",
+            "filter": 0, # not currently used
+            "rescale": 1, 
+            "clusters": 4,
+            "output_name": "test_output", # not currently used
             "workspace_name": self.wsName
         }
 

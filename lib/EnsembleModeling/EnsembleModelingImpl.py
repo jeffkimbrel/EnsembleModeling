@@ -38,6 +38,8 @@ class EnsembleModeling:
         #BEGIN_CONSTRUCTOR
         self.callback_url = os.environ['SDK_CALLBACK_URL']
         self.shared_folder = config['scratch']
+        self.config = config
+        self.config['SDK_CALLBACK_URL'] = self.callback_url
         logging.basicConfig(format='%(created)s %(levelname)s: %(message)s',
                             level=logging.INFO)
         #END_CONSTRUCTOR
@@ -80,13 +82,10 @@ class EnsembleModeling:
         """
         # ctx is the context object
         # return variables are: output
-        #BEGIN run_EnsembleModeling
-        #BEGIN import_annotations
+        #BEGIN analyze_ensemble_model
         analyze_runner = AnalyzeEnsembleModelUtil(self.config)
         output = analyze_runner.run(ctx, params)
-        logging.info("RUNNING")
-        #END import_annotations
-        #END run_EnsembleModeling
+        #END analyze_ensemble_model
 
         # At some point might do deeper type checking...
         if not isinstance(output, dict):

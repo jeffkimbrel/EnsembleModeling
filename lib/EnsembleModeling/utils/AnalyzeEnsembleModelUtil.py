@@ -61,7 +61,7 @@ class AnalyzeEnsembleModelUtil:
         logging.info(et.medioids(ensemble))
 
         # plot clusters
-        r.plot_clusters(ensemble, file_path="/Users/kimbrel1/Github/EnsembleModeling/test/test_data/clusters.png")
+        r.plot_clusters(ensemble, file_path=os.path.join(self.scratch, "clusters.png"))
 
         return({})
 

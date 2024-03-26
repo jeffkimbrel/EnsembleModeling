@@ -24,7 +24,7 @@ RUN pip install --upgrade pip && pip install pandas rpy2
 ## install ensembletools dependencies from CRAN (this won't catch failures though)
 RUN R -e "install.packages(c('cluster','dplyr','forcats','fpc','glue','jsonlite','S7','stringr','tibble','tidyr','vegan'),dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
-RUN R -e "remotes::install_github('jeffkimbrel/ensembletools'); if (!('ensembletools' %in% installed.packages())) { quit(status = 1) }"
+RUN R -e "remotes::install_github('jeffkimbrel/ensembletools@81ca2e2'); if (!('ensembletools' %in% installed.packages())) { quit(status = 1) }"
 RUN R -e ".libPaths()"
 
 
